@@ -48,9 +48,13 @@ passport.deserializeUser((user, done) => {
 import UserRoutes from './routes/user.routes.js'
 import ProductRoutes from './routes/product.routes.js'
 import CategoryRoutes from './routes/category.routes.js'
+import OrderRoutes from './routes/order.routes.js'
+import RequestRoutes from './routes/request.routes.js'
 
 app.use('/api/v1/user', UserRoutes)
 app.use('/api/v1/product', ProductRoutes)
 app.use('/api/v1/category', CategoryRoutes)
+app.use('/api/v1/order', OrderRoutes)
+app.use('/api/v1/request', RequestRoutes)
 
 export { app }

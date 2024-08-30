@@ -1,5 +1,8 @@
 import express from 'express'
 import passport from 'passport'
+import isAuthenticated from '../middleware/isAuthenticated.middleware.js'
+import { UpdateUser } from '../controller/user.controller.js'
+import { ErrorHandler } from '../uttils/errorhandler.middleware.js'
 
 const router = express.Router()
 
@@ -32,18 +35,10 @@ router.route('/login/success').get(async (req, res) => {
   if (req.user) {
     return res.status(200).json({ message: 'user login', user: req.user })
   } else {
-    return res.status(400).json({ message: 'user Not login', user: null })
+    return new ErrorHandler('User Not Login', 400)
   }
 })
 
-// router.route('/login/failure').get(async (req, res) => {
-//   const errorMessage = req.session.messages
-//     ? req.session.messages[0]
-//     : 'Authentication failed'
-//   // Clear the error message
-//   req.session.messages = []
-//   return res.status(400).json({ message: errorMessage, user: null })
-// })
 router.route('/logout').get((req, res) => {
   req.logout((err) => {
     if (err) {
@@ -51,14 +46,14 @@ router.route('/logout').get((req, res) => {
     }
     req.session.destroy((err) => {
       if (err) {
-        return res
-          .status(500)
-          .json({ message: 'Error destroying session', error: err })
+        return new ErrorHandler('Error destroying session', 400)
       }
-      res.clearCookie('connect.sid') // Or whatever your session cookie name is
+      res.clearCookie('connect.sid')
       return res.status(200).json({ message: 'Logged out successfully' })
     })
   })
 })
+
+router.route('/update-profile').put(isAuthenticated, UpdateUser)
 
 export default router

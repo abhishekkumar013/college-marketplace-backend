@@ -1,6 +1,7 @@
 import dotenv from 'dotenv'
 import { app } from './app.js'
 import ConnectDb from './config/db.js'
+import { errorMiddleware } from './uttils/errorhandler.middleware.js'
 
 dotenv.config({
   path: './.env',
@@ -17,3 +18,4 @@ ConnectDb()
   .catch((err) => {
     console.log('MONGO ERROR', err)
   })
+app.use(errorMiddleware)
