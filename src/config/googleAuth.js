@@ -1,6 +1,7 @@
 import passport from 'passport'
 import { Strategy as GoogleStrategy } from 'passport-google-oauth2'
 import { User } from '../models/user.model.js'
+import jwt from 'jsonwebtoken'
 
 const GoogleOAuth = () => {
   passport.use(
@@ -31,7 +32,22 @@ const GoogleOAuth = () => {
             })
             await user.save()
           }
-          return done(null, user)
+
+          const token = jwt.sign(
+            {
+              _id: user.id,
+              email: user.email,
+              displayName: user.displayName,
+              phone: user.phone,
+              hostel: user.hostel,
+            },
+            process.env.JWT_SECRET,
+            {
+              expiresIn: '14d',
+            },
+          )
+
+          return done(null, { user, token })
         } catch (error) {
           return done(error, null)
         }

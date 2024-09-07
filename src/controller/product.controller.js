@@ -274,6 +274,9 @@ export const getLatesProduct = asyncHandler(async (req, res, next) => {
   try {
     const latestProducts = await Product.aggregate([
       {
+        $match: { isSold: false },
+      },
+      {
         $sort: { createdAt: -1 },
       },
       {
@@ -336,9 +339,79 @@ export const getLatesProduct = asyncHandler(async (req, res, next) => {
     next(error)
   }
 })
+// export const getAllProduct = asyncHandler(async (req, res, next) => {
+//   try {
+//     const products = await Product.aggregate([
+//       {
+//         $match: { isSold: false },
+//       },
+//       {
+//         $lookup: {
+//           from: 'categories',
+//           localField: 'category',
+//           foreignField: '_id',
+//           as: 'categoryDetails',
+//         },
+//       },
+//       {
+//         $unwind: '$categoryDetails',
+//       },
+//       {
+//         $lookup: {
+//           from: 'users',
+//           localField: 'seller',
+//           foreignField: '_id',
+//           as: 'sellerDetails',
+//         },
+//       },
+//       {
+//         $unwind: '$sellerDetails',
+//       },
+//       {
+//         $addFields: {
+//           category: '$categoryDetails.name',
+//           sellerName: '$sellerDetails.displayName',
+//           phone: '$sellerDetails.phone',
+//         },
+//       },
+//       {
+//         $project: {
+//           name: 1,
+//           image: 1,
+//           category: 1,
+//           quantity: 1,
+//           desc: 1,
+//           seller: 1,
+//           sellerName: 1,
+//           phone: 1,
+//           mrp: 1,
+//           discount: 1,
+//           additionalCharge: 1,
+//           finalPrice: 1,
+//           isSold: 1,
+//           createdAt: 1,
+//           updatedAt: 1,
+//         },
+//       },
+//     ])
+
+//     return res
+//       .status(200)
+//       .json(new ApiResponse(200, products, 'All Products Fetched'))
+//   } catch (error) {
+//     next(error)
+//   }
+// })
 export const getAllProduct = asyncHandler(async (req, res, next) => {
   try {
+    const page = parseInt(req.query.page) || 1 // Current page number (default to 1)
+    const limit = parseInt(req.query.limit) || 8 // Number of products per page (default to 8)
+    const skip = (page - 1) * limit // Calculate the number of documents to skip
+
     const products = await Product.aggregate([
+      {
+        $match: { isSold: false },
+      },
       {
         $lookup: {
           from: 'categories',
@@ -387,11 +460,29 @@ export const getAllProduct = asyncHandler(async (req, res, next) => {
           updatedAt: 1,
         },
       },
+      {
+        $skip: skip,
+      },
+      {
+        $limit: limit,
+      },
     ])
 
-    return res
-      .status(200)
-      .json(new ApiResponse(200, products, 'All Products Fetched'))
+    const totalProducts = await Product.countDocuments({ isSold: false }) // Count total available products
+
+    const hasMore = page * limit < totalProducts
+
+    return res.status(200).json({
+      success: true,
+      data: products,
+      message: 'Products fetched successfully',
+      pagination: {
+        totalProducts,
+        currentPage: page,
+        totalPages: Math.ceil(totalProducts / limit),
+        hasMore,
+      },
+    })
   } catch (error) {
     next(error)
   }
@@ -542,6 +633,7 @@ export const getProductByCategory = asyncHandler(async (req, res, next) => {
 
 export const getAllMyProduct = asyncHandler(async (req, res, next) => {
   try {
+    console.log(req.user._id)
     const seller = req.user._id
 
     const allProducts = await Product.find({ seller })

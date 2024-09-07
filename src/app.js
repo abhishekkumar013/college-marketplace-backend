@@ -1,16 +1,22 @@
-import expreess from 'express'
-
+import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import passport from 'passport'
 import session from 'express-session'
+import MongoStore from 'connect-mongo'
 import GoogleOAuth from './config/googleAuth.js'
 
-//
+// Routes
+import UserRoutes from './routes/user.routes.js'
+import ProductRoutes from './routes/product.routes.js'
+import CategoryRoutes from './routes/category.routes.js'
+import OrderRoutes from './routes/order.routes.js'
+import RequestRoutes from './routes/request.routes.js'
+import { User } from './models/user.model.js'
 
-const app = expreess()
+const app = express()
 
-// middeleware
+// Middleware
 app.use(
   cors({
     origin: 'http://localhost:5173',
@@ -19,18 +25,28 @@ app.use(
   }),
 )
 
-app.use(expreess.json())
-app.use(expreess.urlencoded({ extended: true }))
-app.use(expreess.static('public'))
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(express.static('public'))
 app.use(cookieParser())
+
+// Session configuration with MongoDB store
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URL,
+      ttl: 14 * 24 * 60 * 60,
+    }),
+    cookie: {
+      maxAge: 14 * 24 * 60 * 60 * 1000,
+      secure: process.env.NODE_ENV === 'production',
+    },
   }),
 )
-// Setup passport
+
 app.use(passport.initialize())
 app.use(passport.session())
 
@@ -43,13 +59,6 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((user, done) => {
   done(null, user)
 })
-
-// routes
-import UserRoutes from './routes/user.routes.js'
-import ProductRoutes from './routes/product.routes.js'
-import CategoryRoutes from './routes/category.routes.js'
-import OrderRoutes from './routes/order.routes.js'
-import RequestRoutes from './routes/request.routes.js'
 
 app.use('/api/v1/user', UserRoutes)
 app.use('/api/v1/product', ProductRoutes)

@@ -80,6 +80,7 @@ export const UpdateUser = asyncHandler(async (req, res, next) => {
     if (!displayName || !phone || !hostel) {
       throw new ErrorHandler('All fields are required', 404)
     }
+    // console.log(req.user)
 
     const existingUser = await User.findById(req.user._id)
 

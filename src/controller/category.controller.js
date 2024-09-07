@@ -1,6 +1,7 @@
 import { Category } from '../models/category.model.js'
 import { ApiResponse } from '../uttils/ApiResponse.js'
 import { asyncHandler } from '../uttils/asyncHandler.js'
+import { ErrorHandler } from '../uttils/errorhandler.middleware.js'
 
 export const addCategory = asyncHandler(async (req, res, next) => {
   const { name } = req.body

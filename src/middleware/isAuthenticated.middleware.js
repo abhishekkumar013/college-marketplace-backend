@@ -1,9 +1,13 @@
 import { ErrorHandler } from '../uttils/errorhandler.middleware.js'
 
 const isAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    return next()
+  try {
+    if (req.isAuthenticated()) {
+      return next()
+    }
+    throw new ErrorHandler('Unauthorized: User not logged in', 500)
+  } catch (error) {
+    next(error)
   }
-  return new ErrorHandler('Unauthorized: User not logged in', 500)
 }
 export default isAuthenticated

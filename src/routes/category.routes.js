@@ -5,10 +5,12 @@ import {
   getAllCategory,
 } from '../controller/category.controller.js'
 import isAuthorised from '../middleware/isAdmin.middleware.js'
+import auth from '../middleware/verifyToken.middleware.js'
 
 const router = express.Router()
 
-router.use(isAuthenticated)
+// router.use(isAuthenticated)
+router.use(auth)
 router.route('/add').post(isAuthorised, addCategory)
 router.route('/get-all').get(getAllCategory)
 

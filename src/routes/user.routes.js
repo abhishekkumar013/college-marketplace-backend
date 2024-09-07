@@ -3,6 +3,8 @@ import passport from 'passport'
 import isAuthenticated from '../middleware/isAuthenticated.middleware.js'
 import { UpdateUser } from '../controller/user.controller.js'
 import { ErrorHandler } from '../uttils/errorhandler.middleware.js'
+import jwt from 'jsonwebtoken'
+import auth from '../middleware/verifyToken.middleware.js'
 
 const router = express.Router()
 
@@ -16,8 +18,7 @@ router.route('/auth/google/callback').get(
     failureMessage: true,
   }),
   (req, res) => {
-    // Successful authentication, redirect home.
-    res.redirect('http://localhost:5173')
+    res.redirect(`http://localhost:5173/login/success?token=${req.user.token}`)
   },
 )
 
@@ -54,6 +55,6 @@ router.route('/logout').get((req, res) => {
   })
 })
 
-router.route('/update-profile').put(isAuthenticated, UpdateUser)
+router.route('/update-profile').put(auth, UpdateUser)
 
 export default router
