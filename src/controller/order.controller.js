@@ -81,11 +81,11 @@ export const getBuyerOrders = asyncHandler(async (req, res, error) => {
 })
 export const getAllSales = asyncHandler(async (req, res, next) => {
   try {
-    const buyerId = req.user._id
+    const sellerId = req.user._id
 
     const orders = await Order.find({
-      buyer: buyerId,
-      status: { $in: ['delivered', 'cancelled'] },
+      seller: sellerId,
+      status: { $in: ['delivered'] },
     })
       .populate('buyer', 'displayName email')
       .populate('product', 'name image finalPrice')
