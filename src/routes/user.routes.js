@@ -10,7 +10,9 @@ const router = express.Router()
 
 router
   .route('/auth/google')
-  .get(passport.authenticate('google', { scope: ['profile', 'email'] }))
+  .get(
+    passport.authenticate('google', { scope: ['profile', 'email', 'openid'] }),
+  )
 
 router.route('/auth/google/callback').get(
   passport.authenticate('google', {
