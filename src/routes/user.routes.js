@@ -21,6 +21,7 @@ router.route('/auth/google/callback').get(
     failureMessage: true,
   }),
   (req, res) => {
+    console.log(req.user.token)
     res.redirect(`http://localhost:5173/login/success?token=${req.user.token}`)
   },
 )
@@ -36,6 +37,7 @@ router.route('/auth/failure').get((req, res) => {
 })
 
 router.route('/login/success').get(async (req, res) => {
+  console.log('Login Success')
   if (req.user) {
     return res.status(200).json({ message: 'user login', user: req.user })
   } else {
