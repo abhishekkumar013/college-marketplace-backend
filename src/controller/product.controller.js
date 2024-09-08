@@ -103,7 +103,10 @@ export const addProduct = asyncHandler(async (req, res, next) => {
 
     const product = await Product.create({
       name,
-      image: productImage.url,
+      image: {
+        publicId: productImage.public_id,
+        url: productImage.secure_url,
+      },
       category,
       quantity: parseInt(quantity),
       desc,
@@ -237,6 +240,7 @@ export const deleteProduct = asyncHandler(async (req, res, next) => {
 export const updateImage = asyncHandler(async (req, res, next) => {
   try {
     const { productid } = req.params
+    console.log('prd', productid)
 
     const existingproduct = await Product.findById(productid)
 
@@ -247,6 +251,10 @@ export const updateImage = asyncHandler(async (req, res, next) => {
     if (!productImageLocalPath) {
       throw new ErrorHandler('Product Image Reequired', 400)
     }
+    const oldPublicId = existingproduct.image.publicId
+    if (oldPublicId) {
+      await cloudinary.uploader.destroy(oldPublicId)
+    }
     const productImage = await uploadonCloudinary(productImageLocalPath)
     if (!productImage || !productImage?.url) {
       throw new ErrorHandler('Error in uploading Product Image', 400)
@@ -255,7 +263,10 @@ export const updateImage = asyncHandler(async (req, res, next) => {
     const product = await Product.findByIdAndUpdate(
       productid,
       {
-        image: productImage.url,
+        image: {
+          publicId: productImage.public_id,
+          url: productImage.secure_url,
+        },
       },
       { new: true },
     )

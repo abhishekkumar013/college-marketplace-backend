@@ -2,7 +2,6 @@ import { ErrorHandler } from '../uttils/errorhandler.middleware.js'
 
 const isAuthorised = (req, res, next) => {
   try {
-    console.log(req.user)
     if (req.user.email === '2105598@kiit.ac.in') {
       return next()
     }

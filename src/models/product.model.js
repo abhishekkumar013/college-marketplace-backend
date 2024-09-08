@@ -10,8 +10,14 @@ const ProductSchema = new mongoose.Schema(
       set: (v) => v.charAt(0).toUpperCase() + v.slice(1),
     },
     image: {
-      type: String,
-      required: true,
+      publicId: {
+        type: String,
+        required: true,
+      },
+      url: {
+        type: String,
+        required: true,
+      },
     },
     category: {
       type: mongoose.Schema.Types.ObjectId,

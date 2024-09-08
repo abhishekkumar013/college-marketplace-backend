@@ -30,14 +30,14 @@ router.route('/myproduct').get(getAllMyProduct)
 router.route('/latest').get(getLatesProduct)
 router.route('/products/search').get(getProductsWithFilters)
 router.route('/category/:categoryid').get(getProductByCategory)
-router.route('/:productid').get(getSingleProduct)
+// router.route('/:productid').get(getSingleProduct)
 
 // Product updates
 router.route('/update/:productid').put(updateProduct)
 router.route('/update-status/:productid').put(updateSoldOut)
 router
   .route('/update-image/:productid')
-  .patch(upload.single('image'), updateImage)
+  .put(upload.single('image'), updateImage)
 
 // Product deletion
 router.route('/delete/:productid').delete(deleteProduct)
