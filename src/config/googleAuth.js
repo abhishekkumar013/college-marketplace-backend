@@ -11,7 +11,7 @@ const GoogleOAuth = () => {
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         callbackURL:
           'https://kiitmart-backend.onrender.com/api/v1/user/auth/google/callback',
-        scope: ['profile', 'email'],
+        scope: ['profile', 'email', 'openid'],
         passReqToCallback: true,
       },
       async (request, accessToken, refreshToken, profile, done) => {
