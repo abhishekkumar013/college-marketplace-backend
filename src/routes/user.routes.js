@@ -37,8 +37,8 @@ router.route('/auth/failure').get((req, res) => {
 })
 
 router.route('/login/success').get(async (req, res) => {
-  console.log('Login Success')
   if (req.user) {
+    console.log(req.user)
     return res.status(200).json({ message: 'user login', user: req.user })
   } else {
     return new ErrorHandler('User Not Login', 400)
