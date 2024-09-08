@@ -53,13 +53,17 @@ app.use(passport.session())
 GoogleOAuth()
 
 passport.serializeUser((user, done) => {
-  done(null, user)
+  done(null, user.id)
 })
 
-passport.deserializeUser((user, done) => {
-  done(null, user)
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await User.findById(id)
+    done(null, user)
+  } catch (err) {
+    done(err)
+  }
 })
-
 app.use('/api/v1/user', UserRoutes)
 app.use('/api/v1/product', ProductRoutes)
 app.use('/api/v1/category', CategoryRoutes)
