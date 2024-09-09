@@ -55,10 +55,12 @@ app.use(passport.session())
 GoogleOAuth()
 
 passport.serializeUser((user, done) => {
+  console.log('Serilize  ', user)
   done(null, user)
 })
 
 passport.deserializeUser((user, done) => {
+  console.log('deserializeUser  ', user)
   done(null, user)
 })
 
