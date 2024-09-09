@@ -55,7 +55,7 @@ app.use(passport.session())
 GoogleOAuth()
 
 passport.serializeUser((user, done) => {
-  console.log('Hii', user._id)
+  console.log('Hii', user.user._id)
   done(null, user._id)
 })
 
