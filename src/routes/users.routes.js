@@ -49,10 +49,14 @@ router.route('/login/success').get(auth, (req, res) => {
   }
 })
 
-res.clearCookie('token', {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: 'none',
+router.route('/logout').get((req, res) => {
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'none',
+  })
+
+  return res.status(200).json({ message: 'Logged out successfully' })
 })
 
 router.route('/update-profile').put(auth, UpdateUser)
