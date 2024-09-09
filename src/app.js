@@ -30,7 +30,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.static('public'))
 app.use(cookieParser())
 
-// Session configuration with MongoDB store
+// Session configuration
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -56,12 +56,7 @@ GoogleOAuth()
 
 passport.serializeUser((user, done) => {
   console.log('Serializing user:', user)
-  if (user && user.user && user.user._id) {
-    done(null, user.user._id) // Serialize the user ID
-  } else {
-    console.error('User object is missing _id:', user)
-    done(new Error('User object is missing _id'))
-  }
+  done(null, user.user._id)
 })
 passport.deserializeUser(async (id, done) => {
   try {
