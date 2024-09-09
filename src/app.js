@@ -53,19 +53,13 @@ app.use(passport.session())
 GoogleOAuth()
 
 passport.serializeUser((user, done) => {
-  console.log('ser ', user.user._id)
-  done(null, user.user._id)
+  done(null, user)
 })
 
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await User.findById(id)
-    console.log('dser ', user)
-    done(null, user)
-  } catch (err) {
-    done(err)
-  }
+passport.deserializeUser((user, done) => {
+  done(null, user)
 })
+
 app.use((req, res, next) => {
   console.log('headers', req.headers.authorization) // Check if token is received
   next()
