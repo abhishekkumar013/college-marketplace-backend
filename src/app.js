@@ -6,7 +6,6 @@ import GoogleOAuth from './config/googleAuth.js'
 import MongoStore from 'connect-mongo'
 import { MongoClient } from 'mongodb'
 import session from 'express-session'
-import GoogleOAuth from './config/googleAuth.js'
 
 // Routes
 import UserRoutes from './routes/users.routes.js'
