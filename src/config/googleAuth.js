@@ -1,5 +1,5 @@
 import passport from 'passport'
-import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
+import { Strategy as GoogleStrategy } from 'passport-google-oauth2'
 import { User } from '../models/user.model.js'
 import jwt from 'jsonwebtoken'
 
@@ -9,11 +9,8 @@ const GoogleOAuth = () => {
       {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL:
-          process.env.NODE_ENV === 'production'
-            ? 'https://kiitmart-backend.onrender.com/api/v1/user/auth/google/callback'
-            : 'http://localhost:8080/api/v1/user/auth/google/callback',
-        scope: ['profile', 'email', 'openid'],
+        callbackURL: '/api/v1/user/auth/google/callback',
+        scope: ['profile', 'email'],
         passReqToCallback: true,
       },
       async (request, accessToken, refreshToken, profile, done) => {
