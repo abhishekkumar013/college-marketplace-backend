@@ -25,7 +25,7 @@ router.route('/auth/google/callback').get(
   (req, res) => {
     console.log('Call user', req.user)
     // req.session.user = req.user
-    res.redirect('/login/success')
+    res.redirect('https://kiitmart-backend.onrender.com/login/success')
   },
 )
 
