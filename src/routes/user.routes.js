@@ -24,6 +24,7 @@ router.route('/auth/google/callback').get(
   }),
   (req, res) => {
     console.log('Call user', req.user)
+    req.session.user = req.user
     res.redirect(`http://localhost:5173/login/success?token=${req.user.token}`)
   },
 )
