@@ -35,7 +35,7 @@ router.route('/auth/google/callback').get(
 router.route('/auth/failure').get((req, res) => {
   const errorMessage = req.session?.messages
     ? encodeURIComponent(req.session.messages[0])
-    : 'Authentication failed'
+    : 'Use Kiit Email Id For Login'
   // Clear the error message
   req.session.messages = []
   // Redirect to the frontend with the error message

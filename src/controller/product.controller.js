@@ -285,7 +285,10 @@ export const getLatesProduct = asyncHandler(async (req, res, next) => {
   try {
     const latestProducts = await Product.aggregate([
       {
-        $match: { isSold: false },
+        $match: {
+          isSold: false,
+          quantity: { $gt: 0 },
+        },
       },
       {
         $sort: { createdAt: -1 },
@@ -421,7 +424,10 @@ export const getAllProduct = asyncHandler(async (req, res, next) => {
 
     const products = await Product.aggregate([
       {
-        $match: { isSold: false },
+        $match: {
+          isSold: false,
+          quantity: { $gt: 0 },
+        },
       },
       {
         $lookup: {
@@ -592,6 +598,12 @@ export const getProductByCategory = asyncHandler(async (req, res, next) => {
         $unwind: '$productdetails',
       },
       {
+        $match: {
+          'productdetails.isSold': false,
+          'productdetails.quantity': { $gt: 0 },
+        },
+      },
+      {
         $lookup: {
           from: 'users',
           localField: 'productdetails.seller',
@@ -717,7 +729,7 @@ export const getProductsWithFilters = asyncHandler(async (req, res, next) => {
   try {
     const { category, hostel, keyword } = req.query
 
-    let query = {}
+    let query = { isSold: false, quantity: { $gt: 0 } }
     let userIds = []
 
     if (hostel) {
@@ -750,7 +762,7 @@ export const getProductsWithFilters = asyncHandler(async (req, res, next) => {
     // console.log(products)
 
     if (products.length === 0) {
-      new ErrorHandler('No products found matching the criteria', 404)
+      throw new ErrorHandler('No products found matching the criteria', 404)
     }
 
     let message = 'Products found successfully'
