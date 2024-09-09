@@ -2,6 +2,7 @@ import express from 'express'
 import passport from 'passport'
 import { ErrorHandler } from '../uttils/errorhandler.middleware.js'
 import auth from '../middleware/verifyToken.middleware.js'
+import { UpdateUser } from '../controller/user.controller.js'
 
 const router = express.Router()
 
