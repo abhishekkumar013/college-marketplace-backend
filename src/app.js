@@ -41,8 +41,8 @@ app.use(
       ttl: 14 * 24 * 60 * 60,
     }),
     cookie: {
-      maxAge: 14 * 24 * 60 * 60 * 1000, // 14 days
-      secure: process.env.NODE_ENV === 'production', // Set true for HTTPS
+      maxAge: 14 * 24 * 60 * 60 * 1000,
+      secure: process.env.NODE_ENV === 'production',
       httpOnly: true,
       sameSite: 'none',
     },
