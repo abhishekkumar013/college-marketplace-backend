@@ -9,10 +9,7 @@ const GoogleOAuth = () => {
       {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL:
-          process.env.NODE_ENV === 'production'
-            ? 'https://kiitmart-backend.onrender.com/api/v1/user/auth/google/callback'
-            : 'http://localhost:8080/api/v1/user/auth/google/callback',
+        callbackURL: process.env.CALLBACK_URL,
         scope: ['profile', 'email'],
         passReqToCallback: true,
       },

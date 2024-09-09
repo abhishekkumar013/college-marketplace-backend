@@ -14,10 +14,7 @@ router
 
 router.route('/auth/google/callback').get(
   passport.authenticate('google', {
-    failureRedirect:
-      process.env.NODE_ENV === 'production'
-        ? 'https://kiitmart-backend.onrender.com/api/v1/user/auth/failure'
-        : 'http://localhost:8080/api/v1/user/auth/failure',
+    failureRedirect: process.env.CALLBACK_URL,
     failureMessage: true,
   }),
   (req, res) => {
