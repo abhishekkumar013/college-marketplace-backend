@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken'
 import { ErrorHandler } from '../uttils/errorhandler.middleware.js'
+import { User } from '../models/user.model.js'
 
-const auth = (req, res, next) => {
+const auth = async (req, res, next) => {
   try {
     // Extract the token from cookies
     const { token } = req.cookies
@@ -11,15 +12,10 @@ const auth = (req, res, next) => {
     }
 
     // Verify the token
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-      if (err) {
-        throw new ErrorHandler('Unauthorized: Invalid token', 401)
-      }
-
-      // Attach the decoded user info to the request object
-      req.user = decoded
-      next()
-    })
+    const decode = await jwt.verify(token, process.env.JWT_SECRET)
+    console.log('decode ', decode)
+    req.user = await User.findById(decode._id)
+    next()
   } catch (error) {
     next(error)
   }

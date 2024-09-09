@@ -42,7 +42,8 @@ router.route('/auth/failure').get((req, res) => {
   res.redirect(`${process.env.Redirect_url}/login?error=${errorMessage}`)
 })
 
-router.route('/login/success').get(auth, async (req, res) => {
+router.route('/login/success').get(auth, (req, res) => {
+  console.log('login success', req.user)
   if (req.user) {
     return res.status(200).json({ message: 'User login', user: req.user })
   }
