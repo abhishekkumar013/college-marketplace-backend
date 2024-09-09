@@ -4,7 +4,7 @@ import { ErrorHandler } from '../uttils/errorhandler.middleware.js'
 const auth = (req, res, next) => {
   try {
     // Extract the token from cookies
-    const token = req.cookies['token']
+    const { token } = req.cookies
 
     if (!token) {
       throw new ErrorHandler('Unauthorized: No token provided', 403)
