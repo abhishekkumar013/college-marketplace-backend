@@ -11,8 +11,8 @@ import auth from '../middleware/verifyToken.middleware.js'
 
 const router = express.Router()
 
-// router.use(isAuthenticated)
-router.use(auth)
+router.use(isAuthenticated)
+// router.use(auth)
 
 router.route('/create-order').post(createOrder)
 
