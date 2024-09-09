@@ -62,6 +62,11 @@ passport.deserializeUser((user, done) => {
   done(null, user)
 })
 
+app.use((req, res, next) => {
+  console.log('Session Info:', req.session)
+  next()
+})
+
 app.use('/api/v1/user', UserRoutes)
 app.use('/api/v1/product', ProductRoutes)
 app.use('/api/v1/category', CategoryRoutes)
