@@ -21,7 +21,9 @@ router.route('/auth/google/callback').get(
     failureMessage: true,
   }),
   (req, res) => {
-    res.redirect(`http://localhost:5173/login/success?token=${req.user.token}`)
+    res.redirect(
+      `${process.env.Redirect_url}/login/success?token=${req.user.token}`,
+    )
   },
 )
 
@@ -32,7 +34,7 @@ router.route('/auth/failure').get((req, res) => {
   // Clear the error message
   req.session.messages = []
   // Redirect to the frontend with the error message
-  res.redirect(`http://localhost:5173/login?error=${errorMessage}`)
+  res.redirect(`${process.env.Redirect_url}/login?error=${errorMessage}`)
 })
 
 router.route('/login/success').get(async (req, res) => {
