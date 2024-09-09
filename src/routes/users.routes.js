@@ -9,7 +9,7 @@ import auth from '../middleware/verifyToken.middleware.js'
 const router = express.Router()
 
 router.get(
-  '/auth/google/callback',
+  '/auth/google',
   passport.authenticate('google', { session: false }),
   (req, res) => {
     const token = jwt.sign(
