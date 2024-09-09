@@ -761,9 +761,9 @@ export const getProductsWithFilters = asyncHandler(async (req, res, next) => {
 
     // console.log(products)
 
-    if (products.length === 0) {
-      throw new ErrorHandler('No products found matching the criteria', 404)
-    }
+    // if (products.length === 0) {
+    //   throw new ErrorHandler('No products found matching the criteria', 404)
+    // }
 
     let message = 'Products found successfully'
     if (hostel && category && keyword) {
