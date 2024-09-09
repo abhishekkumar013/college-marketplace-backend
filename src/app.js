@@ -55,10 +55,14 @@ app.use(passport.session())
 GoogleOAuth()
 
 passport.serializeUser((user, done) => {
-  console.log('Hii', user.user._id)
-  done(null, user.user._id)
+  console.log('Serializing user:', user)
+  if (user && user.user && user.user._id) {
+    done(null, user.user._id) // Serialize the user ID
+  } else {
+    console.error('User object is missing _id:', user)
+    done(new Error('User object is missing _id'))
+  }
 })
-
 passport.deserializeUser(async (id, done) => {
   try {
     const user = await User.findById(id)
