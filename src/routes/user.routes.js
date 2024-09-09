@@ -51,11 +51,20 @@ router.route('/logout').get((req, res) => {
     if (err) {
       return res.status(500).json({ message: 'Error logging out', error: err })
     }
+
     req.session.destroy((err) => {
       if (err) {
-        return new ErrorHandler('Error destroying session', 400)
+        return res
+          .status(400)
+          .json({ message: 'Error destroying session', error: err })
       }
+
+      // Clear session cookie
       res.clearCookie('connect.sid')
+
+      // Clear token cookie (adjust the cookie name if needed)
+      res.clearCookie('token')
+
       return res.status(200).json({ message: 'Logged out successfully' })
     })
   })
