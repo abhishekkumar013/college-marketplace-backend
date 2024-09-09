@@ -55,11 +55,17 @@ app.use(passport.session())
 GoogleOAuth()
 
 passport.serializeUser((user, done) => {
-  done(null, user)
+  console.log('Hii', user._id)
+  done(null, user._id)
 })
 
-passport.deserializeUser((user, done) => {
-  done(null, user)
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await User.findById(id)
+    done(null, user)
+  } catch (err) {
+    done(err)
+  }
 })
 
 app.use((req, res, next) => {
