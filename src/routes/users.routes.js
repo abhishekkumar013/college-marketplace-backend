@@ -1,68 +1,57 @@
 import express from 'express'
 import passport from 'passport'
-import isAuthenticated from '../middleware/isAuthenticated.middleware.js'
-import { UpdateUser } from '../controller/user.controller.js'
 import { ErrorHandler } from '../uttils/errorhandler.middleware.js'
-import jwt from 'jsonwebtoken'
 import auth from '../middleware/verifyToken.middleware.js'
 
 const router = express.Router()
 
-router.get(
-  '/auth/google',
-  passport.authenticate('google', { session: false }),
-  (req, res) => {
-    const token = jwt.sign(
-      {
-        id: req.user._id,
-        email: req.user.email,
-        displayName: req.user.displayName,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: '7d' },
-    )
+router
+  .route('/auth/google')
+  .get(passport.authenticate('google', { scope: ['profile', 'email'] }))
 
-    res.cookie('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'none',
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
-    })
-
-    res.redirect('http://localhost:5173/login/success')
-  },
-)
-router.get(
-  '/auth/google/callback',
+router.route('/auth/google/callback').get(
   passport.authenticate('google', {
-    session: false,
-    failureRedirect: '/login/failure',
+    failureRedirect:
+      process.env.NODE_ENV === 'production'
+        ? 'https://kiitmart-backend.onrender.com/api/v1/user/auth/failure'
+        : 'http://localhost:8080/api/v1/user/auth/failure',
+    failureMessage: true,
   }),
   (req, res) => {
-    const token = jwt.sign(
-      {
-        id: req.user._id,
-        email: req.user.email,
-        displayName: req.user.displayName,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: '7d' },
-    )
-
-    res.cookie('token', token, {
+    console.log('auth/callback ', req.user)
+    const options = {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'none',
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
-    })
-
-    res.redirect('http://localhost:5173/login/success')
+    }
+    res
+      .status(200)
+      .cookie('token', req.user.token, options)
+      .json({ message: 'Login Success' })
   },
 )
 
-router.get('/api/v1/user/logout', (req, res) => {
+router.route('/auth/failure').get((req, res) => {
+  const errorMessage = req.session?.messages
+    ? encodeURIComponent(req.session.messages[0])
+    : 'Authentication failed'
+  // Clear the error message
+  req.session.messages = []
+  // Redirect to the frontend with the error message
+  res.redirect(`${process.env.Redirect_url}/login?error=${errorMessage}`)
+})
+
+router.route('/login/success').get(auth, async (req, res) => {
+  if (req.user) {
+    return res.status(200).json({ message: 'User login', user: req.user })
+  }
+})
+
+router.route('/logout').get((req, res) => {
+  // Clear the token cookie
   res.clearCookie('token')
-  res.json({ message: 'Logged out successfully' })
+
+  return res.status(200).json({ message: 'Logged out successfully' })
 })
 
 router.route('/update-profile').put(auth, UpdateUser)

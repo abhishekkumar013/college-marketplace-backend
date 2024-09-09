@@ -2,12 +2,10 @@ import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import passport from 'passport'
-import session from 'express-session'
-import MongoStore from 'connect-mongo'
 import GoogleOAuth from './config/googleAuth.js'
 
 // Routes
-import UserRoutes from './routes/user.routes.js'
+import UserRoutes from './routes/users.routes.js'
 import ProductRoutes from './routes/product.routes.js'
 import CategoryRoutes from './routes/category.routes.js'
 import OrderRoutes from './routes/order.routes.js'
@@ -30,27 +28,8 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.static('public'))
 app.use(cookieParser())
 
-// Session configuration with MongoDB store
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({
-      mongoUrl: process.env.MONGODB_URL,
-      ttl: 14 * 24 * 60 * 60,
-    }),
-    cookie: {
-      maxAge: 14 * 24 * 60 * 60 * 1000,
-      secure: process.env.NODE_ENV === 'production',
-      httpOnly: true,
-      sameSite: 'none',
-    },
-  }),
-)
-
+// Initialize passport
 app.use(passport.initialize())
-app.use(passport.session())
 
 GoogleOAuth()
 
