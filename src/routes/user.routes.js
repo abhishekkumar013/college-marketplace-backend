@@ -17,10 +17,13 @@ router
 router.route('/auth/google/callback').get(
   passport.authenticate('google', {
     failureRedirect:
-      'https://kiitmart-backend.onrender.com/api/v1/user/auth/failure',
+      process.env.NODE_ENV === 'production'
+        ? 'https://kiitmart-backend.onrender.com/api/v1/user/auth/google/callback'
+        : 'http://localhost:8080/api/v1/user/auth/google/callback',
     failureMessage: true,
   }),
   (req, res) => {
+    console.log('Call user', req.user)
     res.redirect(`http://localhost:5173/login/success?token=${req.user.token}`)
   },
 )
@@ -37,7 +40,7 @@ router.route('/auth/failure').get((req, res) => {
 
 router.route('/login/success').get(async (req, res) => {
   if (req.user) {
-    console.log(req.user)
+    console.log('login success', req.user)
     return res.status(200).json({ message: 'user login', user: req.user })
   } else {
     return new ErrorHandler('User Not Login', 400)

@@ -18,8 +18,8 @@ import auth from '../middleware/verifyToken.middleware.js'
 
 const router = express.Router()
 
-router.use(isAuthenticated)
-// router.use(auth)
+// router.use(isAuthenticated)
+router.use(auth)
 
 // Product creation
 router.route('/add').post(upload.single('image'), addProduct)
