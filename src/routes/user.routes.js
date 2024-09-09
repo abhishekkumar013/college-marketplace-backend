@@ -14,13 +14,14 @@ router
 
 router.route('/auth/google/callback').get(
   passport.authenticate('google', {
-    failureRedirect: process.env.CALLBACK_URL,
+    failureRedirect:
+      process.env.NODE_ENV === 'production'
+        ? 'https://kiitmart-backend.onrender.com/api/v1/user/auth/failure'
+        : 'http://localhost:8080/api/v1/user/auth/failure',
     failureMessage: true,
   }),
   (req, res) => {
-    res.redirect(
-      `${process.env.Redirect_url}/login/success?token=${req.user.token}`,
-    )
+    res.redirect(`http://localhost:5173/login/success?token=${req.user.token}`)
   },
 )
 
@@ -31,7 +32,7 @@ router.route('/auth/failure').get((req, res) => {
   // Clear the error message
   req.session.messages = []
   // Redirect to the frontend with the error message
-  res.redirect(`${process.env.Redirect_url}/login?error=${errorMessage}`)
+  res.redirect(`http://localhost:5173/login?error=${errorMessage}`)
 })
 
 router.route('/login/success').get(async (req, res) => {
