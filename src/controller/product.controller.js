@@ -57,10 +57,6 @@ export const addProduct = asyncHandler(async (req, res, next) => {
       throw new ErrorHandler('MRP must be greater than 0', 401)
     }
 
-    if (!category) {
-      throw new ErrorHandler('Category is required', 404)
-    }
-
     if (
       !name ||
       !quantity ||
@@ -71,6 +67,9 @@ export const addProduct = asyncHandler(async (req, res, next) => {
       finalPrice === undefined
     ) {
       throw new ErrorHandler('All fields are required', 404)
+    }
+    if (!category) {
+      throw new ErrorHandler('Category is required', 404)
     }
 
     const category_exist = await Category.findById(category)
