@@ -28,6 +28,24 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.static('public'))
 app.use(cookieParser())
 
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URL,
+      ttl: 14 * 24 * 60 * 60,
+    }),
+    cookie: {
+      maxAge: 14 * 24 * 60 * 60 * 1000, // 14 days
+      secure: process.env.NODE_ENV === 'production', // Set true for HTTPS
+      httpOnly: true,
+      sameSite: 'none',
+    },
+  }),
+)
+
 // Initialize passport
 app.use(passport.initialize())
 
