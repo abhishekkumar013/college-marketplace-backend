@@ -54,7 +54,7 @@ GoogleOAuth()
 
 passport.serializeUser((user, done) => {
   console.log('ser ', user)
-  done(null, user.id)
+  done(null, user._id)
 })
 
 passport.deserializeUser(async (id, done) => {
