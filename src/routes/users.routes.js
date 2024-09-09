@@ -28,7 +28,7 @@ router.route('/auth/google/callback').get(
     res
       .status(200)
       .cookie('token', req.user.token, options)
-      .json({ message: 'Login Success' })
+      .redirect(`${process.env.Redirect_url}/login/success`)
   },
 )
 
