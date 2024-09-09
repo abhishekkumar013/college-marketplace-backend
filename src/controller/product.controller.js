@@ -53,6 +53,10 @@ export const addProduct = asyncHandler(async (req, res, next) => {
     //   throw new ErrorHandler('Update Phone & Hostel', 400)
     // }
 
+    if (mrp <= 0) {
+      throw new ErrorHandler('MRP must be greater than 0', 401)
+    }
+
     if (!category) {
       throw new ErrorHandler('Category is required', 404)
     }
@@ -72,6 +76,14 @@ export const addProduct = asyncHandler(async (req, res, next) => {
     const category_exist = await Category.findById(category)
     if (!category_exist) {
       throw new ErrorHandler('Category Not Exists', 404)
+    }
+    const calculatedFinalPrice =
+      parseFloat(mrp) -
+      (parseFloat(mrp) * parseFloat(discount)) / 100 +
+      parseFloat(additionalCharge || 0)
+
+    if (calculatedFinalPrice <= 0) {
+      throw new ErrorHandler('Final Price must be greater than 0', 401)
     }
 
     const productImageLocalPath = req.file?.path
@@ -114,7 +126,7 @@ export const addProduct = asyncHandler(async (req, res, next) => {
       mrp: parseFloat(mrp),
       discount: parseFloat(discount),
       additionalCharge: parseFloat(additionalCharge),
-      finalPrice,
+      finalPrice: calculatedFinalPrice,
     })
 
     // console.log('Created product:', product)
