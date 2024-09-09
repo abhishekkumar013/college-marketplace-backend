@@ -32,6 +32,33 @@ router.get(
     res.redirect('http://localhost:5173/login/success')
   },
 )
+router.get(
+  '/auth/google/callback',
+  passport.authenticate('google', {
+    session: false,
+    failureRedirect: '/login/failure',
+  }),
+  (req, res) => {
+    const token = jwt.sign(
+      {
+        id: req.user._id,
+        email: req.user.email,
+        displayName: req.user.displayName,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' },
+    )
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'none',
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+    })
+
+    res.redirect('http://localhost:5173/login/success')
+  },
+)
 
 router.get('/api/v1/user/logout', (req, res) => {
   res.clearCookie('token')
