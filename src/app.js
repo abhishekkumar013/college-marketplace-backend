@@ -66,6 +66,11 @@ passport.deserializeUser(async (id, done) => {
     done(err)
   }
 })
+app.use((req, res, next) => {
+  console.log('headers', req.headers.authorization) // Check if token is received
+  next()
+})
+
 app.use('/api/v1/user', UserRoutes)
 app.use('/api/v1/product', ProductRoutes)
 app.use('/api/v1/category', CategoryRoutes)
