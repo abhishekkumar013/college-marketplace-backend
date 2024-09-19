@@ -22,7 +22,7 @@ export const addCategory = asyncHandler(async (req, res, next) => {
 
 export const getAllCategory = asyncHandler(async (req, res, next) => {
   try {
-    const categories = await Category.find({})
+    const categories = await Category.find({}).sort({ name: 1 })
 
     if (!categories || categories.length === 0) {
       throw new ErrorHandler('No Category Found', 404)
