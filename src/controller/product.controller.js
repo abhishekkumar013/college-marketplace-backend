@@ -60,7 +60,6 @@ export const addProduct = asyncHandler(async (req, res, next) => {
     if (
       !name ||
       !quantity ||
-      !desc ||
       !mrp ||
       discount === undefined ||
       additionalCharge === undefined ||
@@ -120,7 +119,7 @@ export const addProduct = asyncHandler(async (req, res, next) => {
       },
       category,
       quantity: parseInt(quantity),
-      desc,
+      desc:desc ||'',
       seller: userId,
       mrp: parseFloat(mrp),
       discount: parseFloat(discount),
