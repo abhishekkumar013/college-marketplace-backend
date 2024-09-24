@@ -80,7 +80,9 @@ export const addProduct = asyncHandler(async (req, res, next) => {
       (parseFloat(mrp) * parseFloat(discount)) / 100 +
       parseFloat(additionalCharge || 0)
 
-    if (calculatedFinalPrice <= 0) {
+    // calculatedFinalPrice = parseFloat(calculatedFinalPrice.toFixed(2));
+
+    if (calculatedFinalPrice <= 1) {
       throw new ErrorHandler('Final Price must be greater than 0', 401)
     }
 
@@ -124,7 +126,7 @@ export const addProduct = asyncHandler(async (req, res, next) => {
       mrp: parseFloat(mrp),
       discount: parseFloat(discount),
       additionalCharge: parseFloat(additionalCharge),
-      finalPrice: calculatedFinalPrice,
+      finalPrice:  parseFloat(calculatedFinalPrice.toFixed(2)),
     })
 
     // console.log('Created product:', product)
