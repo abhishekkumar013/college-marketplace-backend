@@ -8,7 +8,7 @@ const auth = async (req, res, next) => {
     const { token } = req.cookies
 
     if (!token) {
-      throw new ErrorHandler('Unauthorized: No token provided', 403)
+      throw new ErrorHandler(' Please log in again.', 403)
     }
 
     // Verify the token
