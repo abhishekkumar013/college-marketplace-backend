@@ -19,7 +19,7 @@ router.route('/auth/google/callback').get(
     failureMessage: true,
   }),
   (req, res) => {
-    console.log('auth/callback ', req.user)
+   
     const options = {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
