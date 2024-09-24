@@ -43,7 +43,7 @@ const GoogleOAuth = () => {
             },
             process.env.JWT_SECRET,
             {
-              expiresIn: '14d',
+              expiresIn: '7d',
             },
           )
 

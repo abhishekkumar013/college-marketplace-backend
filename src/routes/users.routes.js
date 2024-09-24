@@ -24,6 +24,7 @@ router.route('/auth/google/callback').get(
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'none',
+      maxAge: 7 * 24 * 60 * 60 * 1000 
     }
     res
       .status(200)
@@ -43,7 +44,7 @@ router.route('/auth/failure').get((req, res) => {
 })
 
 router.route('/login/success').get(auth, (req, res) => {
-  console.log('login success', req.user)
+ 
   if (req.user) {
     return res.status(200).json({ message: 'User login', user: req.user })
   }
