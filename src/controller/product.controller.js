@@ -75,10 +75,11 @@ export const addProduct = asyncHandler(async (req, res, next) => {
     if (!category_exist) {
       throw new ErrorHandler('Category Not Exists', 404)
     }
-    const calculatedFinalPrice =
+    const calculatedFinalPrice = Math.ceil(
       parseFloat(mrp) -
-      (parseFloat(mrp) * parseFloat(discount)) / 100 +
-      parseFloat(additionalCharge || 0)
+        (parseFloat(mrp) * parseFloat(discount)) / 100 +
+        parseFloat(additionalCharge || 0),
+    )
 
     // calculatedFinalPrice = parseFloat(calculatedFinalPrice.toFixed(2));
 
@@ -121,12 +122,12 @@ export const addProduct = asyncHandler(async (req, res, next) => {
       },
       category,
       quantity: parseInt(quantity),
-      desc:desc ||'',
+      desc: desc || '',
       seller: userId,
       mrp: parseFloat(mrp),
       discount: parseFloat(discount),
       additionalCharge: parseFloat(additionalCharge),
-      finalPrice:  parseFloat(calculatedFinalPrice.toFixed(2)),
+      finalPrice: calculatedFinalPrice,
     })
 
     // console.log('Created product:', product)
