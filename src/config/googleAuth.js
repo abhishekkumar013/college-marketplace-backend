@@ -17,7 +17,7 @@ const GoogleOAuth = () => {
         try {
           // Validate the user's email domain
           const emailDomain = profile.emails[0].value.split('@')[1]
-          if (emailDomain !== 'kiit.ac.in' && emailDomain !== 'kims.ac.in') {
+          if (emailDomain !== 'kiit.ac.in' && emailDomain !== 'kims.ac.in' && emailDomain !== 'kins.ac.in' && emailDomain !== 'kids.ac.in') {
             return done(null, false, {
               message: 'Use KIIT or KIMS Email Id For Login',
             })
