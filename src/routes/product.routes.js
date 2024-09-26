@@ -41,5 +41,6 @@ router
 
 // Product deletion
 router.route('/delete/:productid').delete(deleteProduct)
+router.route('/:productid').get(getSingleProduct)
 
 export default router
