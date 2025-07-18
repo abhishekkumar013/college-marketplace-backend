@@ -42,16 +42,8 @@ export const getSellerOrders = asyncHandler(async (req, res, next) => {
 
     const orders = await Order.find({ seller: sellerId, status: 'pending' })
       .populate('buyer', 'displayName email phone')
-      .populate({
-        path: 'product',
-        select: 'name images finalPrice',
-        transform: (doc) => ({
-          name: doc.name,
-          image: doc.images.length > 0 ? doc.images[0].url : null,
-          finalPrice: doc.finalPrice,
-        }),
-      })
-      .select('status')
+      .populate('product', 'name image finalPrice')
+      .select('status createdAt updatedAt')
 
     if (!orders || orders.length === 0) {
       throw new ErrorHandler('No orders found for this seller', 404)
@@ -73,15 +65,7 @@ export const getBuyerOrders = asyncHandler(async (req, res, error) => {
 
     const orders = await Order.find({ buyer: buyerId })
       .populate('seller', 'displayName email')
-      .populate({
-        path: 'product',
-        select: 'name images finalPrice',
-        transform: (doc) => ({
-          name: doc.name,
-          image: doc.images.length > 0 ? doc.images[0].url : null,
-          finalPrice: doc.finalPrice,
-        }),
-      })
+      .populate('product', 'name  image finalPrice')
       .select('status')
 
     if (!orders || orders.length === 0) {
@@ -104,15 +88,7 @@ export const getAllSales = asyncHandler(async (req, res, next) => {
       status: { $in: ['delivered'] },
     })
       .populate('buyer', 'displayName email')
-      .populate({
-        path: 'product',
-        select: 'name images finalPrice',
-        transform: (doc) => ({
-          name: doc.name,
-          image: doc.images.length > 0 ? doc.images[0].url : null,
-          finalPrice: doc.finalPrice,
-        }),
-      })
+      .populate('product', 'name image finalPrice')
       .select('status createdAt')
 
     if (!orders || orders.length === 0) {
