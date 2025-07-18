@@ -10,9 +10,9 @@ import {
   getProductByCategory,
   getProductsWithFilters,
   getSingleProduct,
+  updateImages,
   updateProduct,
   updateSoldOut,
-  updateImage,
 } from '../controller/product.controller.js'
 import auth from '../middleware/verifyToken.middleware.js'
 
@@ -22,7 +22,7 @@ const router = express.Router()
 router.use(auth)
 
 // Product creation
-router.route('/add').post(upload.single('image'), addProduct)
+router.route('/add').post(upload.array('images', 4), addProduct)
 
 // Product retrieval
 router.route('/all').get(getAllProduct)
@@ -36,8 +36,8 @@ router.route('/category/:categoryid').get(getProductByCategory)
 router.route('/update/:productid').put(updateProduct)
 router.route('/update-status/:productid').put(updateSoldOut)
 router
-  .route('/update-image/:productid')
-  .put(upload.single('image'), updateImage)
+  .route('/update-images/:productId')
+  .put(upload.array('images', 4), updateImages)
 
 // Product deletion
 router.route('/delete/:productid').delete(deleteProduct)

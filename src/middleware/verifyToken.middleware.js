@@ -1,27 +1,27 @@
-import jwt from 'jsonwebtoken'
-import { ErrorHandler } from '../uttils/errorhandler.middleware.js'
-import { User } from '../models/user.model.js'
+import jwt from "jsonwebtoken";
+import { ErrorHandler } from "../uttils/errorhandler.middleware.js";
+import { User } from "../models/user.model.js";
 
 const auth = async (req, res, next) => {
   try {
     // Extract the token from cookies
-    const { token } = req.cookies
+    const { token } = req.cookies;
 
     if (!token) {
-      throw new ErrorHandler(' Please log in again.', 403)
+      throw new ErrorHandler(" Please log in again.", 403);
     }
 
     // Verify the token
-    const decode = await jwt.verify(token, process.env.JWT_SECRET)
-    
-    req.user = await User.findById(decode._id)
-    next()
-  } catch (error) {
-    next(error)
-  }
-}
+    const decode = await jwt.verify(token, process.env.JWT_SECRET);
 
-export default auth
+    req.user = await User.findById(decode._id);
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default auth;
 
 // const auth = (req, res, next) => {
 //   try {

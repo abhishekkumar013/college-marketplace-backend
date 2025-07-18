@@ -6,19 +6,21 @@ const ProductSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      maxlength: [40, 'Product name cannot exceed 40 characters'],
+      maxlength: [120, 'Product name cannot exceed 120 characters'],
       set: (v) => v.charAt(0).toUpperCase() + v.slice(1),
     },
-    image: {
-      publicId: {
-        type: String,
-        required: true,
+    images: [
+      {
+        publicId: {
+          type: String,
+          required: true,
+        },
+        url: {
+          type: String,
+          required: true,
+        },
       },
-      url: {
-        type: String,
-        required: true,
-      },
-    },
+    ],
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Category',
