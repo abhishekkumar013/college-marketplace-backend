@@ -111,6 +111,8 @@ export const checkUserAuth = asyncHandler(async (req, res, next) => {
     }
     const user = req.user;
 
+    console.log("Userji", user);
+
     return res
       .status(200)
       .json(new ApiResponse(200, user, "verified successfully"));
